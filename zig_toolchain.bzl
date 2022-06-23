@@ -1,10 +1,10 @@
-# demo_toolchain.bzl
+# zig_toolchain.bzl
 
 #toolchain_type(name = "toolchain_type")
 
-DEMO_TOOLCHAIN = "@rules_demo//:demo_toolchain_type"
+DEMO_TOOLCHAIN = "@rules_demo//:zig_toolchain_type"
 
-def _demo_toolchain_info(ctx):
+def _zig_toolchain_info(ctx):
     return [
         platform_common.ToolchainInfo(
             #compiler = ctx.attr.compiler,
@@ -12,12 +12,12 @@ def _demo_toolchain_info(ctx):
         ),
     ]
 
-demo_toolchain_info = rule(
-    _demo_toolchain_info,
+zig_toolchain_info = rule(
+    _zig_toolchain_info,
     attrs = {
         #"_compiler": attr.label(
         #    executable = True,
-        #    default = "//:demo_compiler",
+        #    default = "//:zig_compiler",
         #    cfg = "host",
         #),
         "cflags": attr.string_list(),

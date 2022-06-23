@@ -2,20 +2,20 @@
 
 toolchain_type(name = "toolchain_type") # sito truko
 
-load(":demo_toolchain.bzl", "demo_toolchain_info")
+load(":zig_toolchain.bzl", "zig_toolchain_info")
 
-demo_toolchain_info(
-    name = "demo_toolchain_info/i686-linux-gnu",
+zig_toolchain_info(
+    name = "zig_toolchain_info/osx-aarm64",
     cflags = ["--target-os=osx", "--target-arch=aarm64"],
 )
 
-demo_toolchain_info(
-    name = "demo_toolchain_info/x86_64-linux-gnu",
+zig_toolchain_info(
+    name = "zig_toolchain_info/x86_64-linux-gnu",
     cflags = ["--target-os=linux", "--target-arch=amd64"],
 )# BUILD
 
 toolchain(
-    name = "demo_toolchain_linux_osx_aarm",
+    name = "zig_toolchain_linux_osx_aarm",
     #exec_compatible_with = [
     #        "@bazel_tools//platforms:linux",
     #        "@bazel_tools//platforms:x86_32",
@@ -26,9 +26,9 @@ toolchain(
     #        "@bazel_tools//platforms:linux",
     #        "@bazel_tools//platforms:x86_32",
     ],
-    toolchain = ":demo_toolchain_info/i686-linux-gnu",
+    toolchain = ":zig_toolchain_info/osx-aarm64",
     toolchain_type = ":toolchain_type",
 )
 
-load(":rules.bzl", "demo_rule")
-demo_rule(name = "ASD")
+load(":rules.bzl", "zig_rule")
+zig_rule(name = "test")

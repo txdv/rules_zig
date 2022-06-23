@@ -1,13 +1,13 @@
 # rules.bzl
 
-#load(":demo_toolchain.bzl")
+#load(":zig_toolchain.bzl")
 
-def _demo_rule(ctx):
+def _zig_rule(ctx):
     tc = ctx.toolchains[":toolchain_type"]
     #print("toolchain: %s %r" % (tc.compiler, tc.cflags))
     print("toolchain: %r" % (tc.cflags))
 
-demo_rule = rule(
-    _demo_rule,
+zig_rule = rule(
+    _zig_rule,
     toolchains = [":toolchain_type"],
 )
