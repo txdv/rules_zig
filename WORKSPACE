@@ -1,6 +1,6 @@
 # WORKSPACE
 
-workspace(name = "demo_rules")
+workspace(name = "rules_zig")
 
 register_toolchains(
     "//:zig_toolchain_linux_osx_aarm",

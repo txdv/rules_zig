@@ -2,7 +2,7 @@
 
 #toolchain_type(name = "toolchain_type")
 
-DEMO_TOOLCHAIN = "@rules_demo//:zig_toolchain_type"
+DEMO_TOOLCHAIN = "@rules_zig//:zig_toolchain_type"
 
 def _zig_toolchain_info(ctx):
     return [
