@@ -1,8 +1,6 @@
-# BUILD
-
-toolchain_type(name = "toolchain_type") # sito truko
-
 load(":zig_toolchain.bzl", "zig_toolchain_info")
+
+toolchain_type(name = "toolchain_type")
 
 zig_toolchain_info(
     name = "zig_toolchain_info/osx-aarm64",
@@ -31,4 +29,4 @@ toolchain(
 )
 
 load(":rules.bzl", "zig_rule")
-zig_rule(name = "test")
+zig_rule(name = "test", srcs = ["test.zig"])

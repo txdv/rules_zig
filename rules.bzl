@@ -7,13 +7,14 @@ def _zig_rule(ctx):
     
     output_file = ctx.actions.declare_file(ctx.label.name)
 
-    inputs = ctx.files.srcs
+    srcs = ctx.files.srcs
+    paths = [src.path for src in srcs]
 
     ctx.actions.run(
         mnemonic = "zig",
-        executable = "/Users/andriusb/Projects/zig/bin/zig_build",
-        arguments = ["build-exe", "-femit-bin=" + output_file.path, "test.zig"],
-        inputs = inputs,
+        executable = tc.path,
+        arguments = ["build-exe", "-femit-bin=" + output_file.path] + paths,
+        inputs = srcs,
         outputs = [output_file],
     )
 
@@ -27,3 +28,5 @@ zig_rule = rule(
         "srcs": attr.label_list(allow_files = [".zig"]),
     }
 )
+
+zig_build_exe = zig_rule

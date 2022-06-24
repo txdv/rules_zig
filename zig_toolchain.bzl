@@ -7,7 +7,7 @@ DEMO_TOOLCHAIN = "@rules_zig//:zig_toolchain_type"
 def _zig_toolchain_info(ctx):
     return [
         platform_common.ToolchainInfo(
-            #compiler = ctx.attr.compiler,
+            path = "/Users/andriusb/Projects/zig/bin/zig_build",
             cflags = ctx.attr.cflags,
         ),
     ]
@@ -15,11 +15,7 @@ def _zig_toolchain_info(ctx):
 zig_toolchain_info = rule(
     _zig_toolchain_info,
     attrs = {
-        #"_compiler": attr.label(
-        #    executable = True,
-        #    default = "//:zig_compiler",
-        #    cfg = "host",
-        #),
+        "path": attr.string_list(),
         "cflags": attr.string_list(),
     },
 )
