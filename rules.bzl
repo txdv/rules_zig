@@ -4,7 +4,7 @@
 
 def _zig_rule(ctx):
     tc = ctx.toolchains[":toolchain_type"]
-    
+
     output_file = ctx.actions.declare_file(ctx.label.name)
 
     srcs = ctx.files.srcs
@@ -30,3 +30,40 @@ zig_rule = rule(
 )
 
 zig_build_exe = zig_rule
+
+def _zig_test(ctx):
+    tc = ctx.toolchains[":toolchain_type"]
+
+    output_file = ctx.actions.declare_file(ctx.label.name)
+
+    srcs = ctx.files.srcs
+    paths = [src.path for src in srcs]
+
+    runfiles_root = output_file.path + ".runfiles"
+    workspace_name = ctx.workspace_name
+
+    content = "{path} test {srcs}".format(
+        path = tc.path,
+        srcs = " ".join(paths),
+    )
+
+    ctx.actions.write(
+        output = output_file,
+        content = content,
+        is_executable = True,
+    )
+
+    runfiles = ctx.runfiles(files = ctx.files.srcs)
+    return [DefaultInfo(
+        executable = output_file,
+        runfiles = runfiles,
+    )]
+
+zig_test = rule(
+    _zig_test,
+    toolchains = [":toolchain_type"],
+    test = True,
+    attrs = {
+        "srcs": attr.label_list(allow_files = [".zig"]),
+    }
+)
