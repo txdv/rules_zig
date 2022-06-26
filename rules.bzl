@@ -48,12 +48,8 @@ def _zig_test(ctx):
         outputs = [test_binary],
     )
 
-    # TODO: this is a hack
-    prefix_len = len("bazel-out/darwin-fastbuild/bin") + 1
-    test_binary_path = test_binary.path[prefix_len:]
-
     content = "{path} {zig}".format(
-        path = test_binary_path,
+        path = test_binary.short_path,
         zig = tc.path,
     )
 
