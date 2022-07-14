@@ -74,3 +74,7 @@ zig_test = rule(
         "srcs": attr.label_list(allow_files = [".zig"]),
     }
 )
+
+def zig_pkg(name, srcs):
+    zig_build_exe(name = name, srcs = srcs)
+    zig_test(name = name + "_test", srcs = srcs)
