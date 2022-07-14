@@ -12,13 +12,16 @@ def _zig_rule(ctx):
 
     ctx.actions.run(
         mnemonic = "zig",
-        executable = tc.path,
+        executable = ctx.attr.wrapper.files_to_run.executable,
         arguments = ["build-exe", "-femit-bin=" + output_file.path] + paths,
-        inputs = srcs,
+        inputs = depset(srcs + [ctx.attr.compiler.files_to_run.executable]),
         outputs = [output_file],
     )
 
-    return [DefaultInfo(files = depset([output_file]), executable = output_file)]
+    return [DefaultInfo(
+        files = depset([output_file]),
+        executable = output_file,
+    )]
 
 zig_rule = rule(
     _zig_rule,
@@ -26,6 +29,22 @@ zig_rule = rule(
     executable=True,
     attrs = {
         "srcs": attr.label_list(allow_files = [".zig"]),
+        "compiler": attr.label(
+            default = Label("@zig_sdk//:compiler"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "compiler_data": attr.label(
+            default = Label("@zig_sdk//:compiler_data"),
+            providers = ["files"],
+        ),
+        "wrapper": attr.label(
+            default = Label("//:wrapper"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        )
     }
 )
 
@@ -38,19 +57,19 @@ def _zig_test(ctx):
     test_binary = ctx.actions.declare_file(ctx.label.name + "_binary")
 
     srcs = ctx.files.srcs
-    paths = [src.path for src in srcs]
+    srcs_path = [src.path for src in srcs]
 
     ctx.actions.run(
         mnemonic = "zig",
-        executable = tc.path,
-        arguments = ["test", "--test-no-exec", "-femit-bin=" + test_binary.path] + paths,
-        inputs = srcs,
+        executable = ctx.attr.wrapper.files_to_run.executable,
+        arguments = ["test", "--test-no-exec", "-femit-bin=" + test_binary.path] + srcs_path,
+        inputs = depset(srcs + [ctx.attr.compiler.files_to_run.executable]),
         outputs = [test_binary],
     )
 
     content = "{path} {zig}".format(
         path = test_binary.short_path,
-        zig = tc.path,
+        zig = ctx.attr.compiler.files_to_run.executable.path,
     )
 
     ctx.actions.write(
@@ -72,7 +91,23 @@ zig_test = rule(
     test = True,
     attrs = {
         "srcs": attr.label_list(allow_files = [".zig"]),
-    }
+        "compiler": attr.label(
+            default = Label("@zig_sdk//:compiler"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        ),
+        "compiler_data": attr.label(
+            default = Label("@zig_sdk//:compiler_data"),
+            providers = ["files"],
+        ),
+        "wrapper": attr.label(
+            default = Label("//:wrapper"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "exec",
+        )
+    },
 )
 
 def zig_pkg(name, srcs):

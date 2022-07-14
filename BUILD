@@ -30,3 +30,8 @@ toolchain(
 
 load(":rules.bzl", "zig_rule")
 zig_rule(name = "test", srcs = ["test.zig"])
+filegroup(
+    name = "wrapper",
+    srcs = ["zig.sh"],
+    visibility = ["//visibility:public"],
+)
